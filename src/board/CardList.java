@@ -15,7 +15,15 @@ public class CardList {
 
     }
 
-    public static int size(){
+    public int size(){
+        return 0;
+    }
 
+    public Card getElementAt(int index){
+        return cList.get(index);
+    }
+
+    public Card removeCardAt(int index){
+        return cList.remove(index);
     }
 }

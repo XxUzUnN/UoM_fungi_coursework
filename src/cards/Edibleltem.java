@@ -8,6 +8,6 @@ public class Edibleltem extends Card {
     }
 
     public static int getFlavourPoints() {
-
+        return 0;
     }
 }
