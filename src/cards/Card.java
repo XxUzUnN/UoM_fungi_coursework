@@ -9,11 +9,11 @@ public class Card {
         this.cardName = cardName;
     }
 
-    public static CardType getType(){
+    public CardType getType(){
         return null;
     }
 
-    public static String getName(){
+    public String getName(){
         return null;
     }
 }

@@ -31,12 +31,12 @@ public class Player {
         return sticks;
     }
 
-    public void addSticks(int sticks){
-        this.sticks = sticks;
+    public void addSticks(int stick) {
+        sticks += stick;
     }
 
-    public void removeSticks(int sticks){
-        this.sticks = sticks;
+    public void removeSticks(int stick) {
+        sticks -= stick;
     }
 
     public Hand getHand(){
@@ -55,9 +55,11 @@ public class Player {
         d.add(card);
     }
 
-    public boolean takeCardFromTheForest(int i){
-
-        return false;
+    public boolean takeCardFromTheForest(int options){
+        switch (options){
+            case 1:
+        }
+        return true;
     }
 
     public boolean takeFromDecay(){
@@ -74,9 +76,9 @@ public class Player {
 
         return false;
     }
-     public boolean putPanDown(){
+    public boolean putPanDown(){
 
-         return false;
-     }
+        return false;
+    }
 
 }
