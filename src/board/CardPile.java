@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Stack;
 
 public class CardPile {
-    private static Stack<Card> cPile;
+    private Stack<Card> cPile;
 
     public CardPile() {
         cPile = new Stack<>();
