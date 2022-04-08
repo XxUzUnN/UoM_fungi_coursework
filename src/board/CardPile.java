@@ -2,30 +2,26 @@ package board;
 
 import cards.Card;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Stack;
 
 public class CardPile {
-    private static ArrayList<Card> cPile;
+    private static Stack<Card> cPile;
 
     public CardPile() {
-        cPile = new ArrayList<>();
+        cPile = new Stack<>();
     }
 
     public void addCard(Card card) {
-        cPile.add(card);
+        cPile.push(card);
     }
 
     public Card drawCard() {
-        return cPile.remove(0);
+        return cPile.pop();
     }
 
     public void shufflePile() {
-        for (int i = 0; i < cPile.size(); i++) {
-            int r = (int) (Math.random() * cPile.size());
-            Card temp = cPile.get(i);
-            cPile.set(i, cPile.get(r));
-            cPile.set(r, temp);
-        }
+        Collections.shuffle(cPile);
     }
 
     public int pileSize() {

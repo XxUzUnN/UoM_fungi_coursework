@@ -8,11 +8,11 @@ public class CardList {
     private ArrayList<Card> cList;
 
     public CardList(){
-
+        cList = new ArrayList<Card>();
     }
 
     public void add(Card add){
-
+        cList.add(add);
     }
 
     public int size(){

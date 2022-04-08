@@ -1,6 +1,7 @@
 package board;
 
 import cards.Card;
+import cards.CardType;
 
 import java.util.ArrayList;
 
@@ -55,10 +56,33 @@ public class Player {
         d.add(card);
     }
 
-    public boolean takeCardFromTheForest(int options){
-        switch (options){
-            case 1:
+    public boolean takeCardFromTheForest(int position){
+        if(position < 1 || position > 8 || h.size() == handlimit) {
+            return false;
         }
+        else {
+            Card card = Board.getForest().getElementAt(8 - position);
+            CardType type = card.getType();
+            if(type == CardType.DAYMUSHROOM || type == CardType.NIGHTMUSHROOM) {
+                if(position ==1 || position == 2) {
+                    this.h.add(card);
+                }
+                else {
+                    if(sticks < position - 2){
+                        return false;
+                    }
+                }
+            }
+            else if(type == CardType.BASKET) {
+                this.d.add(card);
+                handlimit += 2;
+            }
+            else if(type == CardType.STICK) {
+                this.sticks += 1;
+            }
+
+        }
+        Board.getForest().removeCardAt(position);
         return true;
     }
 
