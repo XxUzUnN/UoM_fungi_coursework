@@ -114,19 +114,29 @@ public class Player {
         int numBasket = 0;
         for(int i = 0; i < Board.getDecayPile().size(); i++){
             if (Board.getDecayPile().get(i).getType() == (CardType.STICK)) {
-                addCardtoHand(Board.getDecayPile().get(i));
+                addSticks(i);
             }
             else if (Board.getDecayPile().get(i).getType() == (CardType.BASKET)) {
                 isBasket = true;
+                addCardtoDisplay(Board.getDecayPile().get(i));
                 numBasket ++ ;
+                handlimit += 2;
             }
         }
         if(this.h.size() == this.handlimit && !isBasket){
             return false;
         }
+        if(this.h.size() == this.handlimit && isBasket){
+            if(this.h.size() + Board.getDecayPile().size() > this.handlimit){
+                return false;
+            }else addCardtoHand(Board.getDecayPile().get(Board.getDecayPile().size()));
+        }
         else if(Board.getDecayPile().size() == 4 && this.h.size() <= this.handlimit - Board.getDecayPile().size()) {
-                addCardtoHand(Board.getDecayPile().get(0));
-            }
+            addCardtoHand(Board.getDecayPile().get(0));
+            addCardtoHand(Board.getDecayPile().get(0));
+            addCardtoHand(Board.getDecayPile().get(0));
+            addCardtoHand(Board.getDecayPile().get(0));
+        }
         return true;
     }
 
