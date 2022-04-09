@@ -10,10 +10,10 @@ public class Card {
     }
 
     public CardType getType(){
-        return null;
+        return type;
     }
 
     public String getName(){
-        return null;
+        return cardName;
     }
 }

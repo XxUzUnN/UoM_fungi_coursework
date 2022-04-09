@@ -3,6 +3,7 @@ package board;
 import cards.Card;
 import cards.CardType;
 import cards.Pan;
+import cards.Stick;
 
 import java.util.ArrayList;
 
@@ -36,10 +37,21 @@ public class Player {
 
     public void addSticks(int stick) {
         sticks += stick;
+        for(int i = 0; i < stick; i++){
+            getDisplay().add(new Stick());
+        }
     }
 
     public void removeSticks(int stick) {
         sticks -= stick;
+        for (int i = 0; i < stick; i++) {
+            for(int j = 0; j < getDisplay().size(); j++){
+                if (getDisplay().getElementAt(j).getType() == CardType.STICK){
+                    getDisplay().removeElement(j);
+                    break;
+                }
+            }
+        }
     }
 
     public Hand getHand(){
@@ -61,41 +73,40 @@ public class Player {
     public boolean takeCardFromTheForest(int position){
         if (position < 1 || position > 8) {
             return false;
-        } else {
-            Card card = Board.getForest().getElementAt(8 - position);
-            CardType type = card.getType();
-            if (type == CardType.BASKET) {
-                if (position > 2) {
-                    if (getStickNumber() < position - 2) {
-                        return false;
-                    }
-                    sticks -= position - 2;
-                }
-                handlimit += 2;
-                this.d.add(card);
-            } else if (type == CardType.STICK) {
-                if (position > 2) {
-                    if (getStickNumber() < position - 2) {
-                        return false;
-                    }
-                    sticks -= position - 2;
-                }
-                sticks += 1;
-            } else {
-                if (h.size() == handlimit) {
+        }
+        Card card = Board.getForest().getElementAt(8 - position);
+        CardType type = card.getType();
+        if (type == CardType.BASKET) {
+            if (position > 2) {
+                if (getStickNumber() < position - 2) {
                     return false;
                 }
-                if (position > 2) {
-                    if (getStickNumber() < position - 2) {
-                        return false;
-                    }
-                    sticks -= position - 2;
-                }
-                this.h.add(card);
+                removeSticks(position - 2);
             }
-            Board.getForest().removeCardAt(position);
-            return true;
+            this.handlimit += 2;
+            addCardtoDisplay(card);
+        } else if (type == CardType.STICK) {
+            if (position > 2) {
+                if (getStickNumber() < position - 2) {
+                    return false;
+                }
+                removeSticks(position - 2);
+            }
+            addSticks(1);
+        } else {
+            if (h.size() == handlimit) {
+                return false;
+            }
+            if (position > 2) {
+                if (getStickNumber() < position - 2) {
+                    return false;
+                }
+                sticks -= position - 2;
+            }
+            addCardtoHand(card);
         }
+        Board.getForest().removeCardAt(position);
+        return true;
     }
 
     public boolean takeFromDecay(){
@@ -136,8 +147,21 @@ public class Player {
         return false;
     }
     public boolean putPanDown(){
-
-        return false;
+        boolean result = false;
+        int panPosition = 0;
+        for(int i = 0; i < this.h.size(); i++){
+            if(this.h.getElementAt(i).getType() == CardType.PAN){
+                result = true;
+                panPosition = i;
+            }
+        }
+        if(!result){
+            return false;
+        }
+        else{
+            addCardtoDisplay(this.h.removeElement(panPosition));
+        }
+        return true;
     }
 
 }

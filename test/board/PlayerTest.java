@@ -318,6 +318,7 @@ public class PlayerTest {
 		int handSizeBefore = p.getHand().size();
 		p.takeCardFromTheForest(n);
 		int handSizeAfter = p.getHand().size();
+		System.out.println("Before:" + handSizeBefore);
 		assertEquals(handSizeBefore,handSizeAfter);
 	}
 	
