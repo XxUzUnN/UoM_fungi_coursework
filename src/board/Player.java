@@ -110,30 +110,23 @@ public class Player {
     }
 
     public boolean takeFromDecay(){
-        boolean result = false;
+        boolean isBasket = false;
+        int numBasket = 0;
         for(int i = 0; i < Board.getDecayPile().size(); i++){
-            if(Board.getDecayPile().get(i).getType() == (CardType.BASKET)){
-                result = true;
+            if (Board.getDecayPile().get(i).getType() == (CardType.STICK)) {
+                addCardtoHand(Board.getDecayPile().get(i));
             }
-            if(result){
-                i += 1;
-            }
-            else{
-                break;
+            else if (Board.getDecayPile().get(i).getType() == (CardType.BASKET)) {
+                isBasket = true;
+                numBasket ++ ;
             }
         }
-        if(this.h.size() == this.handlimit && result){
+        if(this.h.size() == this.handlimit && !isBasket){
             return false;
         }
-        else {
-            if (Board.getDecayPile().size() == 4) {
-                this.h.add(Board.getDecayPile().get(0));
-            } else if (Board.getDecayPile().size() == 3 && !result) {
-                this.h.add(Board.getDecayPile().get(1));
-            } else if (Board.getDecayPile().size() == 4 && !result) {
-                this.h.add(Board.getDecayPile().get(2));
+        else if(Board.getDecayPile().size() == 4 && this.h.size() <= this.handlimit - Board.getDecayPile().size()) {
+                addCardtoHand(Board.getDecayPile().get(0));
             }
-        }
         return true;
     }
 
