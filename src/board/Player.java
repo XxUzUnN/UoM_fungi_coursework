@@ -2,6 +2,7 @@ package board;
 
 import cards.Card;
 import cards.CardType;
+import cards.Pan;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public class Player {
         score = 0;
         handlimit = 8;
         sticks = 0;
+        d.add(new Pan());
     }
 
     public int getScore(){
@@ -57,33 +59,43 @@ public class Player {
     }
 
     public boolean takeCardFromTheForest(int position){
-        if(position < 1 || position > 8 || h.size() == handlimit) {
+        if (position < 1 || position > 8) {
             return false;
-        }
-        else {
+        } else {
             Card card = Board.getForest().getElementAt(8 - position);
             CardType type = card.getType();
-            if(type == CardType.DAYMUSHROOM || type == CardType.NIGHTMUSHROOM) {
-                if(position ==1 || position == 2) {
-                    this.h.add(card);
-                }
-                else {
-                    if(sticks < position - 2){
+            if (type == CardType.BASKET) {
+                if (position > 2) {
+                    if (getStickNumber() < position - 2) {
                         return false;
                     }
+                    sticks -= position - 2;
                 }
-            }
-            else if(type == CardType.BASKET) {
-                this.d.add(card);
                 handlimit += 2;
+                this.d.add(card);
+            } else if (type == CardType.STICK) {
+                if (position > 2) {
+                    if (getStickNumber() < position - 2) {
+                        return false;
+                    }
+                    sticks -= position - 2;
+                }
+                sticks += 1;
+            } else {
+                if (h.size() == handlimit) {
+                    return false;
+                }
+                if (position > 2) {
+                    if (getStickNumber() < position - 2) {
+                        return false;
+                    }
+                    sticks -= position - 2;
+                }
+                this.h.add(card);
             }
-            else if(type == CardType.STICK) {
-                this.sticks += 1;
-            }
-
+            Board.getForest().removeCardAt(position);
+            return true;
         }
-        Board.getForest().removeCardAt(position);
-        return true;
     }
 
     public boolean takeFromDecay(){
@@ -103,8 +115,12 @@ public class Player {
             return false;
         }
         else {
-            if(Board.getDecayPile().size() == 4){
+            if (Board.getDecayPile().size() == 4) {
                 this.h.add(Board.getDecayPile().get(0));
+            } else if (Board.getDecayPile().size() == 3 && !result) {
+                this.h.add(Board.getDecayPile().get(1));
+            } else if (Board.getDecayPile().size() == 4 && !result) {
+                this.h.add(Board.getDecayPile().get(2));
             }
         }
         return true;
