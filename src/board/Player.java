@@ -87,8 +87,27 @@ public class Player {
     }
 
     public boolean takeFromDecay(){
-
-        return false;
+        boolean result = false;
+        for(int i = 0; i < Board.getDecayPile().size(); i++){
+            if(Board.getDecayPile().get(i).getType() == (CardType.BASKET)){
+                result = true;
+            }
+            if(result){
+                i += 1;
+            }
+            else{
+                break;
+            }
+        }
+        if(this.h.size() == this.handlimit && result){
+            return false;
+        }
+        else {
+            if(Board.getDecayPile().size() == 4){
+                this.h.add(Board.getDecayPile().get(0));
+            }
+        }
+        return true;
     }
 
     public boolean cookMushrooms(ArrayList<Card> cards){
