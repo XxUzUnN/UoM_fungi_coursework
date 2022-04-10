@@ -207,17 +207,17 @@ public class Player {
                 break;
             }
         }
-        if (numPan==0 || numMushroom_d + numMushroom_n*2 < 3){
+        if (numPan == 0 || numMushroom_d + numMushroom_n * 2 < 3){
             return false;
         }
-        if (numCider*5+numButter*4>numMushroom_d+numMushroom_n*2){
+        if (numCider * 5 + numButter * 4 > numMushroom_d + numMushroom_n * 2){
             return false;
         }
         int pointEachCard = new EdibleItem(zzz.getType(), zzz.getName()).getFlavourPoints();
-        score+=pointEachCard*(numMushroom_d+numMushroom_n*2)+numCider*5+numButter*3;
+        score += pointEachCard * (numMushroom_d + numMushroom_n * 2) + numCider * 5 + numButter * 3;
         for (int i = 0; i < numMushroom_d+numMushroom_d; i++) {
             for (int j = 0; j < getHand().size(); j++) {
-                if (getHand().getElementAt(j).getType() == cards.get(j).getType()&&getHand().getElementAt(j).getName().equals(cards.get(j).getName())) {
+                if (getHand().getElementAt(j).getType() == cards.get(j).getType() && getHand().getElementAt(j).getName().equals(cards.get(j).getName())) {
                     getHand().removeElement(j);
                     break;
                 }
@@ -238,11 +238,33 @@ public class Player {
                 numMushroom_n += 1;
             }
         }
-        if (numMushroom_d + numMushroom_n*2 < number){
+        if (numMushroom_d + numMushroom_n*2 < number || number <2){
             return false;
         }
-        return false;
+        int stickEachCard = new Mushroom(CardType.DAYMUSHROOM,name).getSticksPerMushroom();
+        for (int i = 0; i < number; i++) {
+            for (int j = 0; j < getHand().size(); j++) {
+                if(getHand().getElementAt(j).getName().equals(name) && getHand().getElementAt(j).getType() == CardType.NIGHTMUSHROOM){
+                    getHand().removeElement(j);
+                    addSticks(stickEachCard*2);
+                    break;
+                }
+            }
+        }
+        if(number - numMushroom_n*2 > 0){
+            for (int i = 0; i < number - numMushroom_n; i++) {
+                for (int j = 0; j < getHand().size(); j++) {
+                    if(getHand().getElementAt(j).getName().equals(name) && getHand().getElementAt(j).getType() == CardType.DAYMUSHROOM){
+                        getHand().removeElement(j);
+                        addSticks(stickEachCard);
+                        break;
+                    }
+                }
+            }
+        }
+        return true;
     }
+
     public boolean putPanDown(){
         boolean result = false;
         int panPosition = 0;
