@@ -63,7 +63,13 @@ public class Player {
     }
 
     public void addCardtoHand(Card card){
-        h.add(card);
+        if (card.getType()== CardType.BASKET) {
+            addCardtoDisplay(card);
+            handlimit+=2;
+        }else{
+            h.add(card);
+        }
+
     }
 
     public void addCardtoDisplay(Card card){
@@ -109,35 +115,56 @@ public class Player {
         return true;
     }
 
-    public boolean takeFromDecay(){
-        boolean isBasket = false;
+    public boolean takeFromDecay() {
+        int decaySize = Board.getDecayPile().size();
         int numBasket = 0;
-        for(int i = 0; i < Board.getDecayPile().size(); i++){
-            if (Board.getDecayPile().get(i).getType() == (CardType.STICK)) {
-                addSticks(i);
-            }
-            else if (Board.getDecayPile().get(i).getType() == (CardType.BASKET)) {
-                isBasket = true;
-                addCardtoDisplay(Board.getDecayPile().get(i));
-                numBasket ++ ;
-                handlimit += 2;
-            }
-        }
-        if(this.h.size() == this.handlimit && !isBasket){
+        if (getHand().size()>handlimit) {
             return false;
         }
-        if(this.h.size() == this.handlimit && isBasket){
-            if(this.h.size() + Board.getDecayPile().size() > this.handlimit){
+        for (int i = 0; i < decaySize; i++) {
+            if (Board.getDecayPile().get(i).getType() == CardType.BASKET) {
+                numBasket++;
+            }
+        }
+        if (handlimit != getHand().size()) {
+            if (getHand().size() + Board.getDecayPile().size() - numBasket > handlimit + numBasket * 2) {
                 return false;
-            }else addCardtoHand(Board.getDecayPile().get(Board.getDecayPile().size()));
+            }
+            for (int i = 0; i < decaySize; i++) {
+                if (Board.getDecayPile().get(0).getType() == CardType.BASKET) {
+                    addCardtoDisplay(Board.getDecayPile().remove(0));
+                    handlimit += 2;
+                } else if (Board.getDecayPile().get(0).getType() == CardType.STICK) {
+                    addSticks(1);
+                    Board.getDecayPile().remove(0);
+                } else {
+                    addCardtoHand(Board.getDecayPile().remove(0));
+                }
+            }
+            return true;
+        } else {
+            if (numBasket == 0) {
+                return false;
+            } else if (numBasket == 1) {
+                if (Board.getDecayPile().size() == 4) {
+                    return false;
+                }
+            }
+            for (int i = 0; i < decaySize; i++) {
+                if (Board.getDecayPile().get(0).getType() == CardType.BASKET) {
+                    addCardtoDisplay(Board.getDecayPile().remove(0));
+                    System.out.println("before: " + handlimit);
+                    handlimit += 2;
+                    System.out.println("after: " + handlimit);
+                } else if (Board.getDecayPile().get(0).getType() == CardType.STICK) {
+                    addSticks(1);
+                    Board.getDecayPile().remove(0);
+                } else {
+                    addCardtoHand(Board.getDecayPile().remove(0));
+                }
+            }
+            return true;
         }
-        else if(Board.getDecayPile().size() == 4 && this.h.size() <= this.handlimit - Board.getDecayPile().size()) {
-            addCardtoHand(Board.getDecayPile().get(0));
-            addCardtoHand(Board.getDecayPile().get(0));
-            addCardtoHand(Board.getDecayPile().get(0));
-            addCardtoHand(Board.getDecayPile().get(0));
-        }
-        return true;
     }
 
     public boolean cookMushrooms(ArrayList<Card> cards){
