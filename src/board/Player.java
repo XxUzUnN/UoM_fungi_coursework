@@ -1,9 +1,6 @@
 package board;
 
-import cards.Card;
-import cards.CardType;
-import cards.Pan;
-import cards.Stick;
+import cards.*;
 
 import java.util.ArrayList;
 
@@ -14,7 +11,7 @@ public class Player {
     private int handlimit;
     private int sticks;
 
-    public Player(){
+    public Player() {
         h = new Hand();
         d = new Display();
         score = 0;
@@ -23,7 +20,7 @@ public class Player {
         d.add(new Pan());
     }
 
-    public int getScore(){
+    public int getScore() {
         return score;
     }
 
@@ -31,13 +28,13 @@ public class Player {
         return handlimit;
     }
 
-    public int getStickNumber(){
+    public int getStickNumber() {
         return sticks;
     }
 
     public void addSticks(int stick) {
         sticks += stick;
-        for(int i = 0; i < stick; i++){
+        for (int i = 0; i < stick; i++) {
             getDisplay().add(new Stick());
         }
     }
@@ -45,8 +42,8 @@ public class Player {
     public void removeSticks(int stick) {
         sticks -= stick;
         for (int i = 0; i < stick; i++) {
-            for(int j = 0; j < getDisplay().size(); j++){
-                if (getDisplay().getElementAt(j).getType() == CardType.STICK){
+            for (int j = 0; j < getDisplay().size(); j++) {
+                if (getDisplay().getElementAt(j).getType() == CardType.STICK) {
                     getDisplay().removeElement(j);
                     break;
                 }
@@ -54,29 +51,29 @@ public class Player {
         }
     }
 
-    public Hand getHand(){
+    public Hand getHand() {
         return h;
     }
 
-    public Display getDisplay(){
+    public Display getDisplay() {
         return d;
     }
 
-    public void addCardtoHand(Card card){
-        if (card.getType()== CardType.BASKET) {
+    public void addCardtoHand(Card card) {
+        if (card.getType() == CardType.BASKET) {
             addCardtoDisplay(card);
-            handlimit+=2;
-        }else{
+            handlimit += 2;
+        } else {
             h.add(card);
         }
 
     }
 
-    public void addCardtoDisplay(Card card){
+    public void addCardtoDisplay(Card card) {
         d.add(card);
     }
 
-    public boolean takeCardFromTheForest(int position){
+    public boolean takeCardFromTheForest(int position) {
         if (position < 1 || position > 8) {
             return false;
         }
@@ -118,7 +115,7 @@ public class Player {
     public boolean takeFromDecay() {
         int decaySize = Board.getDecayPile().size();
         int numBasket = 0;
-        if (getHand().size()>handlimit) {
+        if (getHand().size() > handlimit) {
             return false;
         }
         for (int i = 0; i < decaySize; i++) {
@@ -167,13 +164,83 @@ public class Player {
         }
     }
 
-    public boolean cookMushrooms(ArrayList<Card> cards){
-
-        return false;
+    public boolean cookMushrooms(ArrayList<Card> cards) {
+        int numMushroom_d = 0;
+        int numMushroom_n = 0;
+        int numButter = 0;
+        int numCider = 0;
+        int numPan = 0;
+        Card zzz = null;
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getType() == CardType.BASKET) {
+                return false;
+            }
+            if (cards.get(i).getType() == CardType.DAYMUSHROOM) {
+                if (zzz != null && !zzz.getName().equals(cards.get(i).getName())) {
+                    return false;
+                } else {
+                    zzz = cards.get(i);
+                }
+                numMushroom_d += 1;
+            }
+            if (cards.get(i).getType() == CardType.NIGHTMUSHROOM) {
+                if (zzz != null && !zzz.getName().equals(cards.get(i).getName())) {
+                    return false;
+                } else {
+                    zzz = cards.get(i);
+                }
+                numMushroom_n += 1;
+            }
+            if (cards.get(i).getType() == CardType.PAN) {
+                numPan += 1;
+            }
+            if (cards.get(i).getType() == CardType.BUTTER) {
+                numButter += 1;
+            }
+            if (cards.get(i).getType() == CardType.CIDER) {
+                numCider += 1;
+            }
+        }
+        for(int i = 0; i < getDisplay().size(); i++){
+            if(getDisplay().getElementAt(i).getType() == CardType.PAN){
+                numPan += 1;
+                break;
+            }
+        }
+        if (numPan==0 || numMushroom_d + numMushroom_n*2 < 3){
+            return false;
+        }
+        if (numCider*5+numButter*4>numMushroom_d+numMushroom_n*2){
+            return false;
+        }
+        int pointEachCard = new EdibleItem(zzz.getType(), zzz.getName()).getFlavourPoints();
+        score+=pointEachCard*(numMushroom_d+numMushroom_n*2)+numCider*5+numButter*3;
+        for (int i = 0; i < numMushroom_d+numMushroom_d; i++) {
+            for (int j = 0; j < getHand().size(); j++) {
+                if (getHand().getElementAt(j).getType() == cards.get(j).getType()&&getHand().getElementAt(j).getName().equals(cards.get(j).getName())) {
+                    getHand().removeElement(j);
+                    break;
+                }
+            }
+        }
+        putPanDown();
+        return true;
     }
 
     public boolean sellMushrooms(String name, int number){
-
+        name = name.toLowerCase().replace(" ", "").replace("'", "");
+        int numMushroom_d = 0;
+        int numMushroom_n = 0;
+        for (int i = 0; i < getHand().size(); i++) {
+            if (getHand().getElementAt(i).getType() == CardType.DAYMUSHROOM && getHand().getElementAt(i).getName().equals(name)) {
+                numMushroom_d += 1;
+            }else if(getHand().getElementAt(i).getType() == CardType.NIGHTMUSHROOM && getHand().getElementAt(i).getName().equals(name)){
+                numMushroom_n += 1;
+            }
+        }
+        if (numMushroom_d + numMushroom_n*2 < number){
+            return false;
+        }
         return false;
     }
     public boolean putPanDown(){

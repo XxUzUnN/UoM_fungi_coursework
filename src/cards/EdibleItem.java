@@ -21,7 +21,7 @@ public class EdibleItem extends Card {
             case "henofwoods":
                 flavourPoints = 3;
                 break;
-            case "birchbolete":
+            case "birtchbolete":
                 flavourPoints = 3;
                 break;
             case "porcini":
