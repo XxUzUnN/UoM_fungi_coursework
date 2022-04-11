@@ -150,9 +150,7 @@ public class Player {
             for (int i = 0; i < decaySize; i++) {
                 if (Board.getDecayPile().get(0).getType() == CardType.BASKET) {
                     addCardtoDisplay(Board.getDecayPile().remove(0));
-                    System.out.println("before: " + handlimit);
                     handlimit += 2;
-                    System.out.println("after: " + handlimit);
                 } else if (Board.getDecayPile().get(0).getType() == CardType.STICK) {
                     addSticks(1);
                     Board.getDecayPile().remove(0);
