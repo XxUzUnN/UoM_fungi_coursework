@@ -5,7 +5,7 @@ import cards.Card;
 import java.util.ArrayList;
 
 public class CardList {
-    private ArrayList<Card> cList;
+    private final ArrayList<Card> cList;
 
     public CardList(){
         cList = new ArrayList<Card>();
@@ -16,7 +16,7 @@ public class CardList {
     }
 
     public int size(){
-        return 0;
+        return cList.size();
     }
 
     public Card getElementAt(int index){

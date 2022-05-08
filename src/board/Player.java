@@ -5,8 +5,8 @@ import cards.*;
 import java.util.ArrayList;
 
 public class Player {
-    private Hand h;
-    private Display d;
+    private final Hand h;
+    private final Display d;
     private int score;
     private int handlimit;
     private int sticks;
